@@ -37,6 +37,8 @@ public class FileServerHandler extends SimpleChannelInboundHandler<String> {
         RandomAccessFile raf = null;
         long length = -1;
         try {
+        	System.out.println(System.getProperty("user.dir"));
+        	// 比如送文件路径：src\main\java\io\netty\example\file\FileServerHandler.java
             raf = new RandomAccessFile(msg, "r");
             length = raf.length();
         } catch (Exception e) {

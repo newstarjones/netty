@@ -44,6 +44,8 @@ import java.util.concurrent.atomic.AtomicLongFieldUpdater;
  * <li>{@link #getUserDefinedWritability(int)} and {@link #setUserDefinedWritability(int, boolean)}</li>
  * </ul>
  * </p>
+ * 每个channel一个.
+ * 
  */
 public final class ChannelOutboundBuffer {
 
@@ -107,6 +109,8 @@ public final class ChannelOutboundBuffer {
     }
 
     /**
+     * 添加msg到链表尾部.</br>
+     * 
      * Add given message to this {@link ChannelOutboundBuffer}. The given {@link ChannelPromise} will be notified once
      * the message was written.
      */
@@ -130,6 +134,8 @@ public final class ChannelOutboundBuffer {
     }
 
     /**
+     * <p> 标记所有的Entry为flushed状态，准备写入.</p>
+     * 
      * Add a flush to this {@link ChannelOutboundBuffer}. This means all previous added messages are marked as flushed
      * and so you will be able to handle them.
      */
@@ -530,7 +536,7 @@ public final class ChannelOutboundBuffer {
     private void setUnwritable(boolean invokeLater) {
         for (;;) {
             final int oldValue = unwritable;
-            final int newValue = oldValue | 1;
+            final int newValue = oldValue | 1;  // 等价于 oldValue + 1
             if (UNWRITABLE_UPDATER.compareAndSet(this, oldValue, newValue)) {
                 if (oldValue == 0 && newValue != 0) {
                     fireChannelWritabilityChanged(invokeLater);

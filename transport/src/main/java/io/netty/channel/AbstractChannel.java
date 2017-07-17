@@ -519,7 +519,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 pipeline.fireChannelRegistered();
                 // Only fire a channelActive if the channel has never been registered. This prevents firing
                 // multiple channel actives if the channel is deregistered and re-registered.
-                if (firstRegistration && isActive()) {
+                if (firstRegistration && isActive()) {  // 只有第一次注册时调用
                     pipeline.fireChannelActive();
                 }
             } catch (Throwable t) {
@@ -530,6 +530,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
         }
 
+        /**
+         * 绑定Socket地址.
+         */
         @Override
         public final void bind(final SocketAddress localAddress, final ChannelPromise promise) {
             if (!promise.setUncancellable() || !ensureOpen(promise)) {
@@ -947,6 +950,8 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     protected abstract SocketAddress remoteAddress0();
 
     /**
+     * <p> channel注册，各种channel有自己的实现逻辑. </p>
+     * 
      * Is called after the {@link Channel} is registered with its {@link EventLoop} as part of the register process.
      *
      * Sub-classes may override this method

@@ -433,7 +433,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 processSelectedKey(k, (AbstractNioChannel) a);
             } else {
                 @SuppressWarnings("unchecked")
-                NioTask<SelectableChannel> task = (NioTask<SelectableChannel>) a;
+                NioTask<SelectableChannel> task = (NioTask<SelectableChannel>) a; // 该接口netty没有默认实现，需要用户自己提供实现
                 processSelectedKey(k, task);
             }
 
@@ -511,7 +511,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
-                unsafe.read();
+                unsafe.read();  // OP_ACCEPT 表示ServerSocketChannel准备好接受客户端连接  // OP_READ 表示当前的SocketChannel可读
                 if (!ch.isOpen()) {
                     // Connection already closed - no need to handle write.
                     return;
@@ -521,7 +521,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 // Call forceFlush which will also take care of clear the OP_WRITE once there is nothing left to write
                 ch.unsafe().forceFlush();
             }
-            if ((readyOps & SelectionKey.OP_CONNECT) != 0) {
+            if ((readyOps & SelectionKey.OP_CONNECT) != 0) {   // 用于netty客户端. 表示一个客户端连接已经准备好，底层调用java.nio.channels.SocketChannel.finishConnection()方法
                 // remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking
                 // See https://github.com/netty/netty/issues/924
                 int ops = k.interestOps();

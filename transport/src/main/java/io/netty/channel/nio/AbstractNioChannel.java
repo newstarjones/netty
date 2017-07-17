@@ -50,9 +50,9 @@ public abstract class AbstractNioChannel extends AbstractChannel {
             InternalLoggerFactory.getInstance(AbstractNioChannel.class);
 
     private final SelectableChannel ch;
-    protected final int readInterestOp;
+    protected final int readInterestOp; // 对应SelectionKey.OP_READ 或 SelectionKey.OP_ACCEPT（比如ServerSocketChannel就是）
     volatile SelectionKey selectionKey;
-    private volatile boolean inputShutdown;
+    private volatile boolean inputShutdown;  // 意味着 客户端关闭写
     private volatile boolean readPending;
 
     /**
@@ -318,17 +318,18 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     @Override
     protected void doRegister() throws Exception {
         boolean selected = false;
-        for (;;) {
+        for (;;) {  // 注意这里是循环
             try {
+            	// 注册当前channel到selector上，并且注册channel自身到附件上，为0表示不对任何事件感兴趣.
                 selectionKey = javaChannel().register(((NioEventLoop) eventLoop().unwrap()).selector, 0, this);
                 return;
-            } catch (CancelledKeyException e) {
+            } catch (CancelledKeyException e) {  //
                 if (!selected) {
                     // Force the Selector to select now as the "canceled" SelectionKey may still be
                     // cached and not removed because no Select.select(..) operation was called yet.
-                    ((NioEventLoop) eventLoop().unwrap()).selectNow();
+                    ((NioEventLoop) eventLoop().unwrap()).selectNow();  // 当前返回的selectionKey可能是已经被取消的值。调用selectNow清理缓存，重新注册
                     selected = true;
-                } else {
+                } else {  // 若进入这里，那只能是JDK的bug了.
                     // We forced a select operation on the selector before but the SelectionKey is still cached
                     // for whatever reason. JDK bug ?
                     throw e;
@@ -345,7 +346,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     @Override
     protected void doBeginRead() throws Exception {
         // Channel.read() or ChannelHandlerContext.read() was called
-        if (inputShutdown) {
+        if (inputShutdown) {// channel是否处于关闭中
             return;
         }
 

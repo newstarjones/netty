@@ -45,7 +45,7 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
         return new NioMessageUnsafe();
     }
 
-    private final class NioMessageUnsafe extends AbstractNioUnsafe {
+    private final class NioMessageUnsafe extends AbstractNioUnsafe { // ServerSocketChannel 准备Accept时走这里
 
         private final List<Object> readBuf = new ArrayList<Object>();
 

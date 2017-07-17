@@ -192,9 +192,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
                 boolean setOpWrite = false;
                 boolean done = false;
-                long flushedAmount = 0;
+                long flushedAmount = 0;  // 本次写入的字节数
                 if (writeSpinCount == -1) {
-                    writeSpinCount = config().getWriteSpinCount();
+                    writeSpinCount = config().getWriteSpinCount();  // 写字节最大轮询次数
                 }
                 for (int i = writeSpinCount - 1; i >= 0; i --) {
                     int localFlushedAmount = doWriteBytes(buf);
@@ -204,7 +204,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                     }
 
                     flushedAmount += localFlushedAmount;
-                    if (!buf.isReadable()) {
+                    if (!buf.isReadable()) {  // 缓冲区没有可读字节
                         done = true;
                         break;
                     }

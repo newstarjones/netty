@@ -90,10 +90,10 @@ public class LineBasedFrameDecoder extends ByteToMessageDecoder {
         if (!discarding) {
             if (eol >= 0) {
                 final ByteBuf frame;
-                final int length = eol - buffer.readerIndex();
-                final int delimLength = buffer.getByte(eol) == '\r'? 2 : 1;
+                final int length = eol - buffer.readerIndex();  // 本次可读的字节数
+                final int delimLength = buffer.getByte(eol) == '\r'? 2 : 1;  // 分隔符长度 1 或 2 
 
-                if (length > maxLength) {
+                if (length > maxLength) {  // 数据包太长
                     buffer.readerIndex(eol + delimLength);
                     fail(ctx, length);
                     return null;
@@ -106,7 +106,7 @@ public class LineBasedFrameDecoder extends ByteToMessageDecoder {
                     frame = buffer.readSlice(length + delimLength);
                 }
 
-                return frame.retain();
+                return frame.retain();  // retain的用法不懂？？
             } else {
                 final int length = buffer.readableBytes();
                 if (length > maxLength) {
