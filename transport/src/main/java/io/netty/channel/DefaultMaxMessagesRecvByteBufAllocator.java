@@ -89,7 +89,13 @@ public abstract class DefaultMaxMessagesRecvByteBufAllocator implements MaxMessa
         private int maxMessagePerRead;
         private int totalMessages;
         private int totalBytesRead;
+        /**
+         * 尝试读取的字节数
+         */
         private int attemptedBytesRead;
+        /**
+         * 上次读取的字节数
+         */
         private int lastBytesRead;
         private final boolean respectMaybeMoreData = DefaultMaxMessagesRecvByteBufAllocator.this.respectMaybeMoreData;
         private final UncheckedBooleanSupplier defaultMaybeMoreSupplier = new UncheckedBooleanSupplier() {

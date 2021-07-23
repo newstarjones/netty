@@ -122,7 +122,9 @@ abstract class PoolArena<T> extends SizeClasses implements PoolArenaMetric {
     abstract boolean isDirect();
 
     PooledByteBuf<T> allocate(PoolThreadCache cache, int reqCapacity, int maxCapacity) {
+        // 把PooledByteBuf 创建出来，不进行内存分配
         PooledByteBuf<T> buf = newByteBuf(maxCapacity);
+        // 这里才会进行内存分配
         allocate(cache, buf, reqCapacity);
         return buf;
     }
@@ -145,11 +147,13 @@ abstract class PoolArena<T> extends SizeClasses implements PoolArenaMetric {
     private void tcacheAllocateSmall(PoolThreadCache cache, PooledByteBuf<T> buf, final int reqCapacity,
                                      final int sizeIdx) {
 
+        // 首先，从 PoolThreadCache中分配
         if (cache.allocateSmall(this, buf, reqCapacity, sizeIdx)) {
             // was able to allocate out of the cache so move on
             return;
         }
 
+        // 其次，从PoolArena关联的smallSubpagePools对象中分配
         /*
          * Synchronize on the head. This is needed as {@link PoolChunk#allocateSubpage(int)} and
          * {@link PoolChunk#free(long)} may modify the doubly linked list as well.
@@ -167,6 +171,7 @@ abstract class PoolArena<T> extends SizeClasses implements PoolArenaMetric {
             }
         }
 
+        // 最后，从内存中真实分配
         if (needsNormalAllocation) {
             synchronized (this) {
                 allocateNormal(buf, reqCapacity, sizeIdx, cache);

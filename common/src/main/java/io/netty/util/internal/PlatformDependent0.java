@@ -549,6 +549,7 @@ final class PlatformDependent0 {
         ObjectUtil.checkPositiveOrZero(capacity, "capacity");
 
         try {
+            // DIRECT_BUFFER_CONSTRUCTOR = java.nio.DirectByteBuffer, 反射创建一个ByteBuffer
             return (ByteBuffer) DIRECT_BUFFER_CONSTRUCTOR.newInstance(address, capacity);
         } catch (Throwable cause) {
             // Not expected to ever throw!

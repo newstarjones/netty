@@ -147,6 +147,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             boolean close = false;
             try {
                 do {
+                    // 1 这里的 allocHandle 的类型为 MaxMessageHandle
+                    // 2 从 AdaptiveRecvByteBufAllocator#DEFAULT_INITIAL可以看到，默认的bytebuf的size为2K
+                    // 3 这里也是创建bytebuf的入口
                     byteBuf = allocHandle.allocate(allocator);
                     allocHandle.lastBytesRead(doReadBytes(byteBuf));
                     if (allocHandle.lastBytesRead() <= 0) {

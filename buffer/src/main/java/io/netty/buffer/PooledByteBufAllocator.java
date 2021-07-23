@@ -193,6 +193,11 @@ public class PooledByteBufAllocator extends AbstractByteBufAllocator implements 
         this(false);
     }
 
+    /**
+     * 这里虽然表示 deprecation，其实在当前版本中还在发挥重要作用，可能未来会移除
+     *
+     * @param preferDirect
+     */
     @SuppressWarnings("deprecation")
     public PooledByteBufAllocator(boolean preferDirect) {
         this(preferDirect, DEFAULT_NUM_HEAP_ARENA, DEFAULT_NUM_DIRECT_ARENA, DEFAULT_PAGE_SIZE, DEFAULT_MAX_ORDER);

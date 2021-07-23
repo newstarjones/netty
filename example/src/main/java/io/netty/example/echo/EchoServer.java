@@ -49,6 +49,7 @@ public final class EchoServer {
         }
 
         // Configure the server.
+        // 显然这一步非常重要，这个构造方法里将 构造一个NioEventLoop对象
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         final EchoServerHandler serverHandler = new EchoServerHandler();

@@ -45,6 +45,7 @@ public interface RecvByteBufAllocator {
         ByteBuf allocate(ByteBufAllocator alloc);
 
         /**
+         * 下一个期望读取的字节数
          * Similar to {@link #allocate(ByteBufAllocator)} except that it does not allocate anything but just tells the
          * capacity.
          */
@@ -68,6 +69,7 @@ public interface RecvByteBufAllocator {
         void incMessagesRead(int numMessages);
 
         /**
+         * 设置上次读取的字节数
          * Set the bytes that have been read for the last read operation.
          * This may be used to increment the number of bytes that have been read.
          * @param bytes The number of bytes from the previous read operation. This may be negative if an read error
@@ -78,18 +80,21 @@ public interface RecvByteBufAllocator {
         void lastBytesRead(int bytes);
 
         /**
+         * 获取上次读取的字节数
          * Get the amount of bytes for the previous read operation.
          * @return The amount of bytes for the previous read operation.
          */
         int lastBytesRead();
 
         /**
+         * 写操作
          * Set how many bytes the read operation will (or did) attempt to read.
          * @param bytes How many bytes the read operation will (or did) attempt to read.
          */
         void attemptedBytesRead(int bytes);
 
         /**
+         * 读取操作。获取本次读取将读取或已经读取的字节数
          * Get how many bytes the read operation will (or did) attempt to read.
          * @return How many bytes the read operation will (or did) attempt to read.
          */

@@ -2001,6 +2001,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract int writeBytes(InputStream in, int length) throws IOException;
 
     /**
+     * <p>从ScatteringByteChannel中读取length个字节到当前的ByteBuf中</p>
      * Transfers the content of the specified channel to this buffer
      * starting at the current {@code writerIndex} and increases the
      * {@code writerIndex} by the number of the transferred bytes.

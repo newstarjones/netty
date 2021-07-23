@@ -143,7 +143,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             @Override
             public void initChannel(final Channel ch) {
                 final ChannelPipeline pipeline = ch.pipeline();
-                ChannelHandler handler = config.handler();
+                ChannelHandler handler = config.handler(); // 比如 EchoServer中的 LoggingHandler
                 if (handler != null) {
                     pipeline.addLast(handler);
                 }
@@ -205,7 +205,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         @SuppressWarnings("unchecked")
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             final Channel child = (Channel) msg;
-
+            // 如果收到了Channel，则开始装配Channel的信息，并把它注册到childGroup上。接下来 childGroup开始启动 EventLoop线程 处理连接
             child.pipeline().addLast(childHandler);
 
             setChannelOptions(child, childOptions, logger);

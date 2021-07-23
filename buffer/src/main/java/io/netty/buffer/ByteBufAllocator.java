@@ -16,6 +16,8 @@
 package io.netty.buffer;
 
 /**
+ * <p>Facade，统一操作ByteBuf的分配</p>
+ *
  * Implementations are responsible to allocate buffers. Implementations of this interface are expected to be
  * thread-safe.
  */

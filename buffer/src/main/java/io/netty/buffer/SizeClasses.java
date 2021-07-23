@@ -117,29 +117,29 @@ abstract class SizeClasses implements SizeClassesMetric {
         size2idxTab(size2idxTab);
     }
 
-    protected final int pageSize;
-    protected final int pageShifts;
-    protected final int chunkSize;
-    protected final int directMemoryCacheAlignment;
+    protected final int pageSize; // 8192
+    protected final int pageShifts; // 13
+    protected final int chunkSize; // 16777216
+    protected final int directMemoryCacheAlignment; // 0
 
-    final int nSizes;
-    int nSubpages;
-    int nPSizes;
+    final int nSizes; // 76
+    int nSubpages; // 39
+    int nPSizes; // 40
 
-    int smallMaxSizeIdx;
+    int smallMaxSizeIdx; // 38
 
-    private int lookupMaxSize;
+    private int lookupMaxSize;  // 4096
 
-    private final short[][] sizeClasses;
+    private final short[][] sizeClasses; // [0, 4, 4, 0, 0, 1, 4] [1, 4, 4, 1, 0, 1, 4] ...
 
-    private final int[] pageIdx2sizeTab;
+    private final int[] pageIdx2sizeTab; // [8192, 16384, 24576, 32768, 40960, 49152, 57344, 65536, 81920, 98304, 114688, 131072, 163840, 196608, 229376, 262144, 327680, 393216, 458752, 524288, 655360, 786432, 917504, 1048576, 1310720, 1572864, 1835008, 2097152, 2621440, 3145728, 3670016, 4194304, 5242880, 6291456, 7340032, 8388608, 10485760, 12582912, 14680064, 16777216]
 
     // lookup table for sizeIdx <= smallMaxSizeIdx
-    private final int[] sizeIdx2sizeTab;
+    private final int[] sizeIdx2sizeTab; // [16, 32, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 448, 512, 640, 768, 896, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 5120, 6144, 7168, 8192, 10240, 12288, 14336, 16384, 20480, 24576, 28672, 32768, 40960, 49152, 57344, 65536, 81920, 98304, 114688, 131072, 163840, 196608, 229376, 262144, 327680, 393216, 458752, 524288, 655360, 786432, 917504, 1048576, 1310720, 1572864, 1835008, 2097152, 2621440, 3145728, 3670016, 4194304, 5242880, 6291456, 7340032, 8388608, 10485760, 12582912, 14680064, 16777216]
 
     // lookup table used for size <= lookupMaxclass
     // spacing is 1 << LOG2_QUANTUM, so the size of array is lookupMaxclass >> LOG2_QUANTUM
-    private final int[] size2idxTab;
+    private final int[] size2idxTab; // [0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, +156 more]
 
     private int sizeClasses() {
         int normalMaxSize = -1;

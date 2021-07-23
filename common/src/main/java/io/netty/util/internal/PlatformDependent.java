@@ -331,6 +331,7 @@ public final class PlatformDependent {
     }
 
     /**
+     * 看sun.misc.Unsafe是否在classpath上，此类可用于加速内存访问
      * Return {@code true} if {@code sun.misc.Unsafe} was found on the classpath and can be used for accelerated
      * direct memory access.
      */

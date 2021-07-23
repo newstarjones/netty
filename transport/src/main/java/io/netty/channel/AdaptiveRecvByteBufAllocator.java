@@ -47,11 +47,15 @@ public class AdaptiveRecvByteBufAllocator extends DefaultMaxMessagesRecvByteBufA
     static {
         List<Integer> sizeTable = new ArrayList<Integer>();
         for (int i = 16; i < 512; i += 16) {
+            // 16 32 48 64 80 96 ... 496
             sizeTable.add(i);
         }
 
         // Suppress a warning since i becomes negative when an integer overflow happens
         for (int i = 512; i > 0; i <<= 1) { // lgtm[java/constant-comparison]
+            // 512 1024 2048 ... 2的31次方
+//          512 即2的9次方 二进制: 1000000000
+//          512<<1后，512*2=1024 二进制 10000000000
             sizeTable.add(i);
         }
 
@@ -145,8 +149,14 @@ public class AdaptiveRecvByteBufAllocator extends DefaultMaxMessagesRecvByteBufA
         }
     }
 
+    /**
+     * 对应在SIZE_TABLE中的索引，默认申请最小为64字节，对应SIZE_TABLE的索引为3；最大为65536字节，对应SIZE_TABLE的索引为38
+     */
     private final int minIndex;
     private final int maxIndex;
+    /**
+     * 一个bytebuf的初始大小，默认为2K
+     */
     private final int initial;
 
     /**
@@ -201,5 +211,12 @@ public class AdaptiveRecvByteBufAllocator extends DefaultMaxMessagesRecvByteBufA
     public AdaptiveRecvByteBufAllocator respectMaybeMoreData(boolean respectMaybeMoreData) {
         super.respectMaybeMoreData(respectMaybeMoreData);
         return this;
+    }
+
+    public static void main(String[] args) {
+        AdaptiveRecvByteBufAllocator allocator = new AdaptiveRecvByteBufAllocator();
+        System.out.println(allocator.getSizeTableIndex(64));
+        System.out.println(allocator.getSizeTableIndex(2048));
+        System.out.println(allocator.getSizeTableIndex(65536));
     }
 }

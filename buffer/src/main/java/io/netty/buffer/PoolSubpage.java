@@ -74,6 +74,7 @@ final class PoolSubpage<T> implements PoolSubpageMetric {
                 bitmap[i] = 0;
             }
         }
+        // 当前创建的PoolSubpage加入到PoolSubpage池中，这里的PoolSubpage池实际上是一个双向链表
         addToPool(head);
     }
 
@@ -140,6 +141,10 @@ final class PoolSubpage<T> implements PoolSubpageMetric {
         }
     }
 
+    /**
+     * 把当前新建出的PoolSubpage插入到 head 后面
+     * @param head
+     */
     private void addToPool(PoolSubpage<T> head) {
         assert prev == null && next == null;
         prev = head;
